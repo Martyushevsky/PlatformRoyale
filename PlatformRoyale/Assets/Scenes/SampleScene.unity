@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 10
-  _jumpVelocity: 8
+  _jumpVelocity: 20
 --- !u!4 &1373690049
 Transform:
   m_ObjectHideFlags: 0
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70c5166e67fe5943b736c0451f77a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallMultiplier: 5
+  fallMultiplier: 2.5
   lowJumpMultiplier: 2.5
 --- !u!1 &1896748161
 GameObject:

@@ -16,6 +16,7 @@ namespace PlatformRoyale
 
         void FixedUpdate()
         {
+            Debug.Log(rb.velocity.y);
             if (rb.velocity.y < 0)
             {
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
