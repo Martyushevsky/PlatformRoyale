@@ -5,9 +5,11 @@ namespace PlatformRoyale
     public class CharacterMovement : MonoBehaviour
     {
         [SerializeField]
-        protected float _moveSpeed = 1f;
+        protected float _maxSpeed = 1f;
         [SerializeField]
-        protected float _jumpVelocity = 1f;        // Скорость прыжка.
+        protected float _force = 1f;
+        [SerializeField]
+        protected float _jumpVelocity = 1f;
 
         private Rigidbody2D _rb;
 
@@ -16,18 +18,30 @@ namespace PlatformRoyale
             _rb = GetComponent<Rigidbody2D>();
         }
 
-        /// <summary>
-        /// Перемещение персонажа в указанном направлении
-        /// </summary>
-        /// <param name="movement">вектор направления</param>
-        public void Move(Vector3 movement)
+        public void Move(float xAxis)
         {
-            transform.position += movement * Time.deltaTime * _moveSpeed;
+            if (xAxis == 0)
+            {
+                _rb.velocity = new Vector2(0, _rb.velocity.y);
+            }
+
+            if (_rb.velocity.x >= _maxSpeed)
+            {
+                _rb.velocity = new Vector2(_maxSpeed, _rb.velocity.y);
+            }
+            else if (_rb.velocity.x <= -_maxSpeed)
+            {
+                _rb.velocity = new Vector2(-_maxSpeed, _rb.velocity.y);
+            }
+            else
+            {
+                _rb.AddForce(Vector2.right * _force * xAxis * Time.deltaTime, ForceMode2D.Impulse);
+            }
         }
 
         public void Jump()
         {
-            _rb.velocity = Vector2.up * _jumpVelocity;
+            _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity);
         }
     }
 }

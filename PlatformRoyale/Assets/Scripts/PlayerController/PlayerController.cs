@@ -1,8 +1,4 @@
-﻿/* 
- Пока выполняет только роль PlayerInputController 
- т.е. получает ввод и двигает за счет этого персонажа
- */
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PlatformRoyale.SceneObjects
 {
@@ -10,13 +6,10 @@ namespace PlatformRoyale.SceneObjects
     public class PlayerController : BaseSceneObject
     {
         private CharacterMovement _characterMovement;
-        private Vector3 _movement = Vector3.zero;
 
         [SerializeField]
         private Transform _groundCheck;                  // Ссылка на трансформ объекта groundCheck.
-
         private bool _grounded = false;                  // Флаг нахождения на земле.
-
 
 
         void Awake()
@@ -26,12 +19,9 @@ namespace PlatformRoyale.SceneObjects
 
         void Update()
         {
-            _movement.x = Input.GetAxis("Horizontal");
-            //_movement.y = Input.GetAxis("Vertical");            
+            HorizontalMovement();
 
-            _characterMovement.Move(_movement);
-
-            JumpHandler();
+            Jumping();
         }
 
         private void FixedUpdate()
@@ -40,7 +30,12 @@ namespace PlatformRoyale.SceneObjects
             _grounded = Physics2D.Linecast(transform.position, _groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
         }
 
-        void JumpHandler()
+        void HorizontalMovement()
+        {
+            _characterMovement.Move(Input.GetAxis("Horizontal"));
+        }
+
+        void Jumping()
         {
             // Если нажата клавиша прыжжок, тело стоит на земле, тело может прыгать.
             if (Input.GetButtonDown("Jump") && _grounded)
