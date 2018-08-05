@@ -5,11 +5,11 @@ namespace PlatformRoyale
     public class CharacterMovement : MonoBehaviour
     {
         [SerializeField]
-        protected float _maxSpeed = 1f;
+        protected float _maxSpeed = 10f;
         [SerializeField]
-        protected float _force = 1f;
+        protected float _force = 1000f;
         [SerializeField]
-        protected float _jumpVelocity = 1f;
+        protected float _jumpVelocity = 20f;
 
         private Rigidbody2D _rb;
 
@@ -46,7 +46,7 @@ namespace PlatformRoyale
 
         public void WallJump()
         {
-            _rb.velocity = new Vector2(-_rb.velocity.x / 2, _jumpVelocity);
+            _rb.velocity = new Vector2(-Input.GetAxisRaw("Horizontal") * _maxSpeed, _jumpVelocity);
         }
     }
 }

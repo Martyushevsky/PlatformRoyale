@@ -50,7 +50,6 @@ namespace PlatformRoyale.SceneObjects
             }
 
             _onWall = Physics2D.Linecast(transform.position, _wallCheck.position, 1 << LayerMask.NameToLayer("Wall"));
-
         }
 
         void HorizontalMovement()
@@ -71,7 +70,6 @@ namespace PlatformRoyale.SceneObjects
 
         void Jumping()
         {
-            Debug.Log(_doubleJump);
             if (Input.GetButtonDown("Jump") && _grounded)
             {
                 _characterMovement.Jump();
