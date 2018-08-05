@@ -10,12 +10,28 @@ namespace PlatformRoyale
         protected float _force = 1000f;
         [SerializeField]
         protected float _jumpVelocity = 20f;
+        [SerializeField]
+        protected float fallMultiplier = 2.5f;
+        [SerializeField]
+        protected float lowJumpMultiplier = 2.5f;
 
         private Rigidbody2D _rb;
 
         void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void FixedUpdate()
+        {
+            if (_rb.velocity.y < 0)
+            {
+                _rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            }
+            else if (_rb.velocity.y > 0 && !Input.GetButton("Jump"))
+            {
+                _rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+            }
         }
 
         public void Move(float xAxis)
