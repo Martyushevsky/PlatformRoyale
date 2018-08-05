@@ -25,11 +25,11 @@ namespace PlatformRoyale
                 _rb.velocity = new Vector2(0, _rb.velocity.y);
             }
 
-            if (_rb.velocity.x >= _maxSpeed)
+            if (xAxis > 0 && _rb.velocity.x >= _maxSpeed)
             {
                 _rb.velocity = new Vector2(_maxSpeed, _rb.velocity.y);
             }
-            else if (_rb.velocity.x <= -_maxSpeed)
+            else if (xAxis < 0 && _rb.velocity.x <= -_maxSpeed)
             {
                 _rb.velocity = new Vector2(-_maxSpeed, _rb.velocity.y);
             }
@@ -42,6 +42,11 @@ namespace PlatformRoyale
         public void Jump()
         {
             _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity);
+        }
+
+        public void WallJump()
+        {
+            _rb.velocity = new Vector2(-_rb.velocity.x / 2, _jumpVelocity);
         }
     }
 }
