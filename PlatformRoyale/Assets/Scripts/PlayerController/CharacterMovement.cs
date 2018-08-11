@@ -60,9 +60,16 @@ namespace PlatformRoyale
             _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity);
         }
 
-        public void WallJump()
+        public void WallJump(bool facingRight)
         {
-            _rb.velocity = new Vector2(-Input.GetAxisRaw("Horizontal") * _maxSpeed, _jumpVelocity);
+            if (facingRight)
+            {
+                _rb.velocity = new Vector2(-_maxSpeed, _jumpVelocity);
+            }
+            else
+            {
+                _rb.velocity = new Vector2(_maxSpeed, _jumpVelocity);
+            }
         }
     }
 }

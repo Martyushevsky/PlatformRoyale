@@ -1,7 +1,4 @@
-﻿namespace PlatformRoyale.Interfaces
+﻿public interface IDamageable
 {
-    public interface IDamageable
-    {
-        void ApplyDamage(IDamageDealer damageDealer);
-    }
+    void ApplyDamage(IDamageDealer damageDealer);
 }

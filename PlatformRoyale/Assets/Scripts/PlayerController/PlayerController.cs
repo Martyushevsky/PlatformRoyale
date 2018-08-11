@@ -20,11 +20,13 @@ namespace PlatformRoyale.SceneObjects
         private bool _onWall = false;
         private bool _wallJumping = false;
         private bool _crouching = false;
+        private GameObject _body;
 
 
         void Awake()
         {
             _characterMovement = GetComponent<CharacterMovement>();
+            _body = GetComponentInChildren<Collider2D>().gameObject;
         }
 
         void Update()
@@ -81,10 +83,10 @@ namespace PlatformRoyale.SceneObjects
                 _characterMovement.Jump();
             }
 
-            if (Input.GetButtonDown("Jump") && !_grounded && _onWall && _xAxis != 0)
+            if (Input.GetButtonDown("Jump") && !_grounded && _onWall/* && _xAxis != 0*/)
             {
                 Flip();
-                _characterMovement.WallJump();
+                _characterMovement.WallJump(!_facingRight);
                 _doubleJump = 0;
                 _wallJumping = true;
             }
@@ -94,26 +96,27 @@ namespace PlatformRoyale.SceneObjects
         {
             if (_yAxis < 0 && _crouching == false)
             {
-                Vector3 scale = transform.localScale;
+                Vector3 scale = _body.transform.localScale;
                 scale.y *= 0.5f;
-                transform.localScale = scale;
+                _body.transform.localScale = scale;
 
-                Vector3 position = transform.position;
+                Vector3 position = _body.transform.position;
                 position.y -= 0.25f;
-                transform.position = position;
+                _body.transform.position = position;
 
                 _crouching = true;
             }
 
-            if (_yAxis > 0 && _crouching == true)
+            bool hit = Physics2D.OverlapCircle(_groundCheck.position + new Vector3(0, 1, 0), _checkRadius - 0.3f, 1 << LayerMask.NameToLayer("Wall"));
+            if (_yAxis > 0 && _crouching == true && !hit)
             {
-                Vector3 scale = transform.localScale;
+                Vector3 scale = _body.transform.localScale;
                 scale.y *= 2;
-                transform.localScale = scale;
+                _body.transform.localScale = scale;
 
-                Vector3 position = transform.position;
+                Vector3 position = _body.transform.position;
                 position.y += 0.25f;
-                transform.position = position;
+                _body.transform.position = position;
 
                 _crouching = false;
             }
@@ -122,9 +125,9 @@ namespace PlatformRoyale.SceneObjects
         void Flip()
         {
             _facingRight = !_facingRight;
-            Vector3 theScale = transform.localScale;
+            Vector3 theScale = _body.transform.localScale;
             theScale.x *= -1;
-            transform.localScale = theScale;
+            _body.transform.localScale = theScale;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿namespace PlatformRoyale.Interfaces
+﻿public interface IDamageDealer
 {
-    public interface IDamageDealer
-    {
-        float GetDamage();
-    }
+    float GetDamage();
 }
