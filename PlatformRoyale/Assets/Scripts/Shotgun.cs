@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoRifle : MonoBehaviour
+public class Shotgun : MonoBehaviour
 {
     //private Animation _animation;
     //public Light boom;
@@ -10,10 +10,10 @@ public class AutoRifle : MonoBehaviour
 
     public Transform bulletSpawn;
     public GameObject bullet;
-    public float bulletSpeed = 30f;
-    public float damage = 20f;
-    public float impactForce = 100f;
-    public float fireRate = 10f;
+    public float bulletSpeed = 20f;
+    public float damage = 10f;
+    public float impactForce = 200f;
+    public float fireRate = 1.2f;
     public Vector2 bulletScatter;
 
     private float _nextTimeToFire = 0f;
@@ -38,17 +38,20 @@ public class AutoRifle : MonoBehaviour
         // StartCoroutine(Boom());
         //_animation.Play();
 
-        GameObject bulletInstance = Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
-        bulletInstance.name = "Bullet";
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject bulletInstance = Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+            bulletInstance.name = "Bullet";
 
-        var tempBullet = bulletInstance.GetComponent<AutoRifleBullet>();
+            var tempBullet = bulletInstance.GetComponent<ShotgunBullet>();
 
-        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.parent.position;
-        _tempBulletVelocity = direction.normalized * bulletSpeed;
+            Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.parent.position;
+            _tempBulletVelocity = direction.normalized * bulletSpeed;
 
-        tempBullet.SetDamage(damage);
-        tempBullet.ImpactForce = impactForce;
-        tempBullet.BulletVelocity = VelocityRNG(_tempBulletVelocity);
+            tempBullet.SetDamage(damage);
+            tempBullet.ImpactForce = impactForce;
+            tempBullet.BulletVelocity = VelocityRNG(_tempBulletVelocity);
+        }
     }
 
     Vector2 VelocityRNG(Vector2 velocity)

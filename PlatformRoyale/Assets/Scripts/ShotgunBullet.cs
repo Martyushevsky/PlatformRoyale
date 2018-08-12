@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AutoRifleBullet : MonoBehaviour, IDamageDealer
+public class ShotgunBullet : MonoBehaviour, IDamageDealer
 {
     [SerializeField]
     private GameObject _impactEffect;
@@ -9,7 +9,7 @@ public class AutoRifleBullet : MonoBehaviour, IDamageDealer
     private Vector2 _bulletVelocity;
     private Vector2 _gravity;
     private float _yGravity = -10f;
-    private float _liveTime = 2f;
+    private float _liveTime = 0.7f;
     private int _predictionStepsPerFrame = 1;
 
     public float ImpactForce
