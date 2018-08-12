@@ -11,6 +11,8 @@ namespace PlatformRoyale.SceneObjects
         private Transform _groundCheck;
         [SerializeField]
         private Transform _wallCheck;
+        [SerializeField]
+        private GameObject[] _weapons;
         private float _checkRadius = 0.8f;
         private float _xAxis;
         private float _yAxis;
@@ -39,6 +41,8 @@ namespace PlatformRoyale.SceneObjects
             Jumping();
 
             Crouching();
+
+            WeaponChange();
         }
 
         private void FixedUpdate()
@@ -128,6 +132,27 @@ namespace PlatformRoyale.SceneObjects
             Vector3 theScale = _body.transform.localScale;
             theScale.x *= -1;
             _body.transform.localScale = theScale;
+        }
+
+        void WeaponChange()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !_weapons[0].activeSelf)
+            {
+                for (int i = 0; i < _weapons.Length; i++)
+                {
+                    _weapons[i].SetActive(false);
+                }
+                _weapons[0].SetActive(true);
+
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2) && !_weapons[1].activeSelf)
+            {
+                for (int i = 0; i < _weapons.Length; i++)
+                {
+                    _weapons[i].SetActive(false);
+                }
+                _weapons[1].SetActive(true);
+            }
         }
     }
 }

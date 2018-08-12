@@ -17,6 +17,7 @@ public class AutoRifle : MonoBehaviour
     public Vector2 bulletScatter;
 
     private float _nextTimeToFire = 0f;
+    private float _weaponChangeDelay = 0f;
     private Vector2 _tempBulletVelocity;
 
     private void Start()
@@ -26,9 +27,14 @@ public class AutoRifle : MonoBehaviour
         bulletScatter.y = 2;
     }
 
+    private void OnEnable()
+    {
+        _weaponChangeDelay = Time.time + 0.5f;
+    }
+
     public void Update()
     {
-        if (Input.GetButton("Fire1") && Time.time >= _nextTimeToFire)
+        if (Input.GetButton("Fire1") && Time.time >= _nextTimeToFire && Time.time >= _weaponChangeDelay)
         {
             _nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
