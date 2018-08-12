@@ -78,16 +78,19 @@ namespace PlatformRoyale.SceneObjects
         {
             if (Input.GetButtonDown("Jump") && _grounded)
             {
-                _characterMovement.Jump();
+                if (!_crouching)
+                {
+                    _characterMovement.Jump();
+                }
             }
 
-            if (Input.GetButtonDown("Jump") && !_grounded && _doubleJump < 1)
+            if (Input.GetButtonDown("Jump") && !_grounded && !_crouching && _doubleJump < 1)
             {
                 _doubleJump++;
                 _characterMovement.Jump();
             }
 
-            if (Input.GetButtonDown("Jump") && !_grounded && _onWall/* && _xAxis != 0*/)
+            if (Input.GetButtonDown("Jump") && !_grounded && !_crouching && _onWall/* && _xAxis != 0*/)
             {
                 Flip();
                 _characterMovement.WallJump(!_facingRight);
@@ -112,7 +115,7 @@ namespace PlatformRoyale.SceneObjects
             }
 
             bool hit = Physics2D.OverlapCircle(_groundCheck.position + new Vector3(0, 1, 0), _checkRadius - 0.3f, 1 << LayerMask.NameToLayer("Wall"));
-            if (_yAxis > 0 && _crouching == true && !hit)
+            if (Input.GetButtonDown("Jump") && _crouching == true && !hit)
             {
                 Vector3 scale = _body.transform.localScale;
                 scale.y *= 2;
