@@ -49,11 +49,12 @@ public class AutoRifle : MonoBehaviour
         GameObject bulletInstance = Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
         bulletInstance.name = "Bullet";
 
-        var tempBullet = bulletInstance.GetComponent<AutoRifleBullet>();
+        var tempBullet = bulletInstance.GetComponent<AutoRifleBulletBounce>();
 
         Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.parent.position;
         _tempBulletVelocity = direction.normalized * bulletSpeed;
 
+        tempBullet.direction = direction.normalized;
         tempBullet.SetDamage(damage);
         tempBullet.ImpactForce = impactForce;
         tempBullet.BulletVelocity = VelocityRNG(_tempBulletVelocity);

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AutoRifleBullet : MonoBehaviour, IDamageDealer
+public class AutoRifleBulletBounce : MonoBehaviour, IDamageDealer
 {
     [SerializeField]
     private GameObject _impactEffect;
@@ -11,7 +11,10 @@ public class AutoRifleBullet : MonoBehaviour, IDamageDealer
     private float _yGravity = -10f;
     private float _liveTime = 2f;
     private int _predictionStepsPerFrame = 1;
+    private int _bulletHits = 0;
+    private bool _bulletBounced = false;
 
+    public Vector2 direction;
     public float ImpactForce
     {
         get
@@ -52,20 +55,35 @@ public class AutoRifleBullet : MonoBehaviour, IDamageDealer
         Destroy(gameObject, _liveTime);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Vector2 point1 = transform.position;
         float stepSize = 1f / _predictionStepsPerFrame;
         for (float step = 0; step < 1; step += stepSize)
         {
-            BulletVelocity += _gravity * stepSize * Time.deltaTime;
-            Vector2 point2 = point1 + BulletVelocity * stepSize * Time.deltaTime;
+            BulletVelocity += _gravity * stepSize * Time.fixedDeltaTime;
+            Vector2 point2 = point1 + BulletVelocity * stepSize * Time.fixedDeltaTime;
 
-            RaycastHit2D hit = Physics2D.Raycast(point1, point2 - point1, (point2 - point1).magnitude);
-            if (hit)
+            if (_bulletHits < 3)
             {
-                Debug.Log("Hit " + hit.collider.name);
-                ResolveCollision(hit);
+                RaycastHit2D hit = Physics2D.Raycast(point1, point2 - point1, (point2 - point1).magnitude);
+                if (hit)
+                {
+                    Debug.Log("Hit " + hit.collider.name);
+
+                    ResolveCollision(hit);
+
+
+                    if (_bulletHits < 1)
+                    {
+                        BulletVelocity = Vector2.Reflect(direction, hit.normal) * 30;
+                        _bulletBounced = true;
+
+                        //point2 = hit.point;
+                    }
+
+                    _bulletHits++;
+                }
             }
 
             point1 = point2;
@@ -76,6 +94,11 @@ public class AutoRifleBullet : MonoBehaviour, IDamageDealer
 
     void ResolveCollision(RaycastHit2D hit)
     {
+        if (!_bulletBounced)
+        {
+            return;
+        }
+
         var effect = Instantiate(_impactEffect, new Vector3(hit.point.x, hit.point.y, -1), Quaternion.LookRotation(hit.normal));
         Destroy(effect, 1f);
 
@@ -83,19 +106,28 @@ public class AutoRifleBullet : MonoBehaviour, IDamageDealer
         if (damageable != null)
         {
             damageable.ApplyDamage(this);
+            _bulletHits++;
         }
 
         var rb = hit.collider.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.AddForceAtPosition(BulletVelocity * ImpactForce, hit.point);
+            if (_bulletHits > 2)
+            {
+                rb.AddForceAtPosition(BulletVelocity * ImpactForce, hit.point);
+            }
+            else
+            {
+                rb.AddForceAtPosition(-BulletVelocity * ImpactForce, hit.point);
+            }
+
+            _bulletHits++;
         }
 
-        if (gameObject)
+        if (gameObject && _bulletHits > 1)
         {
             Destroy(gameObject);
         }
-
     }
 
     //private void OnDrawGizmos()
