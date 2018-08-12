@@ -22,6 +22,8 @@ public class AutoRifle : MonoBehaviour
     private void Start()
     {
         //_animation = GetComponent<Animation>();
+        bulletScatter.x = 0;
+        bulletScatter.y = 2;
     }
 
     public void Update()

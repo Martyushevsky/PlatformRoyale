@@ -22,6 +22,8 @@ public class Shotgun : MonoBehaviour
     private void Start()
     {
         //_animation = GetComponent<Animation>();
+        bulletScatter.x = 1;
+        bulletScatter.y = 5;
     }
 
     public void Update()
