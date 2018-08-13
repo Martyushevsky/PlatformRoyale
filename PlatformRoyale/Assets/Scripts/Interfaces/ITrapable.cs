@@ -1,4 +1,7 @@
-﻿public interface ITrapable
+﻿namespace PlatformRoyale.Interfaces
 {
-    void Trapped();
+    public interface ITrapable
+    {
+        void Trapped();
+    }
 }
