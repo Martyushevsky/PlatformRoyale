@@ -9,6 +9,7 @@ namespace PlatformRoyale
         private CharacterMovement _characterMovement;
         private GameObject _body;
         private ILadderClimber _climber;
+        private Animator _anim;
 
         [SerializeField]
         private Transform _groundCheck;
@@ -35,11 +36,14 @@ namespace PlatformRoyale
 
         void Awake()
         {
+
+
             _defaultLayer = LayerMask.NameToLayer("Default");
             _onLadderLayer = LayerMask.NameToLayer("OnLadder");
 
             _characterMovement = GetComponent<CharacterMovement>();
             _body = GetComponentInChildren<Collider2D>().gameObject;
+            _anim = _body.GetComponent<Animator>();
             _climber = GetComponentInChildren<ILadderClimber>();
         }
 
@@ -53,6 +57,7 @@ namespace PlatformRoyale
             if (_isClimbing)
             {
                 _characterMovement.LadderClimbing(_yAxis);
+                _anim.SetInteger("MoveX", 0);
             }
             else
             {
@@ -72,9 +77,13 @@ namespace PlatformRoyale
 
             if (_isGrounded)
             {
+                _anim.SetBool("Jumping", false);
+
                 _isWallJumping = false;
                 _doubleJump = 0;
             }
+
+            _anim.SetBool("SecondJump", false);
 
             _isOnWall = Physics2D.Linecast(transform.position, _wallCheck.position, 1 << LayerMask.NameToLayer("Wall"));
         }
@@ -91,7 +100,10 @@ namespace PlatformRoyale
                 {
                     Flip();
                 }
+
                 _characterMovement.Move(_xAxis);
+
+                _anim.SetInteger("MoveX", (int)_xAxis);
             }
         }
 
@@ -102,6 +114,7 @@ namespace PlatformRoyale
                 if (!_isCrouching)
                 {
                     _characterMovement.Jump();
+                    _anim.SetBool("Jumping", true);
                 }
             }
 
@@ -109,6 +122,7 @@ namespace PlatformRoyale
             {
                 _doubleJump++;
                 _characterMovement.Jump();
+                _anim.SetBool("SecondJump", true);
             }
 
             if (Input.GetButtonDown("Jump") && !_isGrounded && !_isCrouching && _isOnWall)
@@ -117,6 +131,7 @@ namespace PlatformRoyale
                 _characterMovement.WallJump(!_isFacingRight);
                 _doubleJump = 0;
                 _isWallJumping = true;
+                _anim.SetBool("SecondJump", true);
             }
         }
 

@@ -93,11 +93,11 @@ namespace PlatformRoyale
         {
             if (yAxis > 0)
             {
-                _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity);
+                _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity / 2);
             }
             else if (yAxis < 0)
             {
-                _rb.velocity = new Vector2(_rb.velocity.x, -_jumpVelocity);
+                _rb.velocity = new Vector2(_rb.velocity.x, -_jumpVelocity / 2);
             }
             else
             {
