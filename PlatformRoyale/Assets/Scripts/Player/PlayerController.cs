@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using PlatformRoyale.Interfaces;
 
 namespace PlatformRoyale
 {
@@ -6,6 +7,8 @@ namespace PlatformRoyale
     public class PlayerController : MonoBehaviour
     {
         private CharacterMovement _characterMovement;
+        private GameObject _body;
+        private ILadderClimber _climber;
 
         [SerializeField]
         private Transform _groundCheck;
@@ -13,22 +16,31 @@ namespace PlatformRoyale
         private Transform _wallCheck;
         [SerializeField]
         private GameObject[] _weapons;
+
+        private int _defaultLayer;
+        private int _onLadderLayer;
+
         private float _checkRadius = 0.8f;
         private float _xAxis;
         private float _yAxis;
-        private bool _facingRight = true;
-        private bool _grounded = false;
+
         private int _doubleJump = 0;
-        private bool _onWall = false;
-        private bool _wallJumping = false;
-        private bool _crouching = false;
-        private GameObject _body;
+        private bool _isGrounded = false;
+        private bool _isOnWall = false;
+        private bool _isWallJumping = false;
+        private bool _isCrouching = false;
+        private bool _isClimbing = false;
+        private bool _isFacingRight = true;
 
 
         void Awake()
         {
+            _defaultLayer = LayerMask.NameToLayer("Default");
+            _onLadderLayer = LayerMask.NameToLayer("OnLadder");
+
             _characterMovement = GetComponent<CharacterMovement>();
             _body = GetComponentInChildren<Collider2D>().gameObject;
+            _climber = GetComponentInChildren<ILadderClimber>();
         }
 
         void Update()
@@ -36,37 +48,46 @@ namespace PlatformRoyale
             _xAxis = Input.GetAxisRaw("Horizontal");
             _yAxis = Input.GetAxisRaw("Vertical");
 
-            HorizontalMovement();
+            LadderChecking();
 
-            Jumping();
+            if (_isClimbing)
+            {
+                _characterMovement.LadderClimbing(_yAxis);
+            }
+            else
+            {
+                HorizontalMovement();
 
-            Crouching();
+                Jumping();
 
-            WeaponChange();
+                Crouching();
+
+                WeaponChange();
+            }
         }
 
         private void FixedUpdate()
         {
-            _grounded = Physics2D.OverlapCircle(_groundCheck.position, _checkRadius, 1 << LayerMask.NameToLayer("Ground"));
+            _isGrounded = Physics2D.OverlapCircle(_groundCheck.position, _checkRadius, 1 << LayerMask.NameToLayer("Ground"));
 
-            if (_grounded)
+            if (_isGrounded)
             {
-                _wallJumping = false;
+                _isWallJumping = false;
                 _doubleJump = 0;
             }
 
-            _onWall = Physics2D.Linecast(transform.position, _wallCheck.position, 1 << LayerMask.NameToLayer("Wall"));
+            _isOnWall = Physics2D.Linecast(transform.position, _wallCheck.position, 1 << LayerMask.NameToLayer("Wall"));
         }
 
         void HorizontalMovement()
         {
-            if (!_wallJumping)
+            if (!_isWallJumping)
             {
-                if (_xAxis > 0 && !_facingRight)
+                if (_xAxis > 0 && !_isFacingRight)
                 {
                     Flip();
                 }
-                else if (_xAxis < 0 && _facingRight)
+                else if (_xAxis < 0 && _isFacingRight)
                 {
                     Flip();
                 }
@@ -76,32 +97,32 @@ namespace PlatformRoyale
 
         void Jumping()
         {
-            if (Input.GetButtonDown("Jump") && _grounded)
+            if (Input.GetButtonDown("Jump") && _isGrounded)
             {
-                if (!_crouching)
+                if (!_isCrouching)
                 {
                     _characterMovement.Jump();
                 }
             }
 
-            if (Input.GetButtonDown("Jump") && !_grounded && !_crouching && _doubleJump < 1)
+            if (Input.GetButtonDown("Jump") && !_isGrounded && !_isCrouching && _doubleJump < 1)
             {
                 _doubleJump++;
                 _characterMovement.Jump();
             }
 
-            if (Input.GetButtonDown("Jump") && !_grounded && !_crouching && _onWall)
+            if (Input.GetButtonDown("Jump") && !_isGrounded && !_isCrouching && _isOnWall)
             {
                 Flip();
-                _characterMovement.WallJump(!_facingRight);
+                _characterMovement.WallJump(!_isFacingRight);
                 _doubleJump = 0;
-                _wallJumping = true;
+                _isWallJumping = true;
             }
         }
 
         void Crouching()
         {
-            if (_yAxis < 0 && _crouching == false)
+            if (Input.GetKeyDown(KeyCode.LeftControl) && _isCrouching == false)
             {
                 Vector3 scale = _body.transform.localScale;
                 scale.y *= 0.5f;
@@ -111,11 +132,11 @@ namespace PlatformRoyale
                 position.y -= 0.25f;
                 _body.transform.position = position;
 
-                _crouching = true;
+                _isCrouching = true;
             }
 
             bool hit = Physics2D.OverlapCircle(_groundCheck.position + new Vector3(0, 1, 0), _checkRadius - 0.3f, 1 << LayerMask.NameToLayer("Wall"));
-            if (Input.GetButtonDown("Jump") && _crouching == true && !hit)
+            if (Input.GetButtonDown("Jump") && _isCrouching == true && !hit)
             {
                 Vector3 scale = _body.transform.localScale;
                 scale.y *= 2;
@@ -125,13 +146,32 @@ namespace PlatformRoyale
                 position.y += 0.25f;
                 _body.transform.position = position;
 
-                _crouching = false;
+                _isCrouching = false;
             }
+        }
+
+        void LadderChecking()
+        {
+            if (_climber.IsTouchingLadder)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    _isClimbing = !_isClimbing;
+                    _body.layer = _onLadderLayer;
+                }
+            }
+            else
+            {
+                _isClimbing = false;
+                _body.layer = _defaultLayer;
+            }
+
+            _characterMovement.PositionOnLadder(_isClimbing, _climber.LadderPosition);
         }
 
         void Flip()
         {
-            _facingRight = !_facingRight;
+            _isFacingRight = !_isFacingRight;
             Vector3 theScale = _body.transform.localScale;
             theScale.x *= -1;
             _body.transform.localScale = theScale;

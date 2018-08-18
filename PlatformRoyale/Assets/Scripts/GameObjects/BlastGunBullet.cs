@@ -3,11 +3,11 @@ using PlatformRoyale.Interfaces;
 
 namespace PlatformRoyale
 {
-    public class AutoRifleBullet : BouncingBulletBase
+    public class BlastGunBullet : BouncingBulletBase
     {
         private void Awake()
         {
-            _bulletLiveTime = 10f;
+            _bulletLiveTime = 2f;
             _bulletDrag = 0.3f;
             _yGravity = -10f;
         }

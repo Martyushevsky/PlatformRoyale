@@ -71,5 +71,38 @@ namespace PlatformRoyale
                 _rb.velocity = new Vector2(_maxSpeed, _jumpVelocity);
             }
         }
+
+        public void PositionOnLadder(bool isClimbing, Vector3 ladderPosition)
+        {
+            if (isClimbing)
+            {
+                var tempPosition = transform.position;
+                tempPosition.x = ladderPosition.x;
+                transform.position = tempPosition;
+
+                _rb.gravityScale = 0;
+                _rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                _rb.gravityScale = 1;
+            }
+        }
+
+        public void LadderClimbing(float yAxis)
+        {
+            if (yAxis > 0)
+            {
+                _rb.velocity = new Vector2(_rb.velocity.x, _jumpVelocity);
+            }
+            else if (yAxis < 0)
+            {
+                _rb.velocity = new Vector2(_rb.velocity.x, -_jumpVelocity);
+            }
+            else
+            {
+                _rb.velocity = Vector2.zero;
+            }
+        }
     }
 }

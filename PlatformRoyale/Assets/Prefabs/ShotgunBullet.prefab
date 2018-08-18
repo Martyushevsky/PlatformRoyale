@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4784030216849308}
   - component: {fileID: 212995966836516808}
   - component: {fileID: 96507179388508092}
-  - component: {fileID: 114331645678210772}
-  m_Layer: 0
+  - component: {fileID: 114727496636986080}
+  m_Layer: 13
   m_Name: ShotgunBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 1
   m_Emitting: 1
---- !u!114 &114331645678210772
+--- !u!114 &114727496636986080
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1179595254669494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 409d2477d2ce031408a57e6a88128a04, type: 3}
+  m_Script: {fileID: 11500000, guid: f90578a0c66e31049b12fbcbe0e08720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _impactEffect: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 2}

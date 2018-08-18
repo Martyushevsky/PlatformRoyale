@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4637197503146810}
   - component: {fileID: 212005911474106182}
   - component: {fileID: 96262856731698026}
-  - component: {fileID: 114157379250455710}
-  m_Layer: 0
+  - component: {fileID: 114002144119926016}
+  m_Layer: 13
   m_Name: AutoRifleBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,9 +132,9 @@ TrailRenderer:
     textureMode: 0
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_Autodestruct: 1
+  m_Autodestruct: 0
   m_Emitting: 1
---- !u!114 &114157379250455710
+--- !u!114 &114002144119926016
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255403323431502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8894475e12dfd5d4c8b5d7d57cd170d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 044e095363415b1408394741514515fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _impactEffect: {fileID: 100006, guid: 0438351a6e6422d43a09930e9be00ee9, type: 2}

@@ -15,10 +15,10 @@ TagManager:
   - 
   - Ground
   - Wall
-  - 
-  - 
-  - 
-  - 
+  - Ladder
+  - OnLadder
+  - LadderTop
+  - Weapons
   - 
   - 
   - 

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212772895732129454}
   - component: {fileID: 96637541518677338}
   - component: {fileID: 114752689532794224}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BlastGunBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
